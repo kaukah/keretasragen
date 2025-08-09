@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Lengkap Sragen-Jogja | KRL + BIAS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a6bdf;
+            --secondary: #f8f9fa;
+            --accent: #ff6b6b;
+            --text: #2c3e50;
+            --light-text: #7f8c8d;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --progress-bg: #e9ecef;
+            --progress-fill: #4a6bdf;
+            --progress-warning: #ffc107;
+            --progress-danger: #ff6b6b;
+            --bias-color: #6c5ce7;
+            --krl-color: #00b894;
+            --transit-color: #fd79a8;
+            --passed-bg: #ffffff;
+            --passed-color: #bdc3c7;
+            --upcoming-bg: #f8f9fa;
+            --highlight-bg: linear-gradient(135deg, rgba(74, 107, 223, 0.15) 0%, rgba(100, 221, 223, 0.15) 100%);
+            --highlight-border: #4a6bdf;
+            --highlight-shadow: 0 0 15px rgba(74, 107, 223, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--bias-color), var(--krl-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subtitle {
+            color: var(--light-text);
+            font-weight: 300;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+
+        .next-train {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        .next-train-label {
+            font-size: 1rem;
+            color: var(--light-text);
+            margin-bottom: 10px;
+        }
+
+        .countdown-timer {
+            font-size: 5rem;
+            font-weight: 700;
+            margin: 15px 0;
+            color: var(--primary);
+            animation: pulse 2s infinite;
+        }
+
+        .next-departure-info {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: var(--progress-bg);
+            border-radius: 5px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--progress-fill);
+            border-radius: 5px;
+            transition: width 1s linear, background 0.3s ease;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: var(--secondary);
+            border: none;
+            border-radius: 30px;
+            margin: 0 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            color: var(--light-text);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .schedule-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            animation: fadeInUp 0.8s ease-out;
+            margin-bottom: 30px;
+        }
+
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .route {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .current-time {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .schedule-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .schedule-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            align-items: center;
+            padding: 15px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background: var(--secondary);
+        }
+
+        .schedule-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .schedule-item.next {
+            background: var(--highlight-bg);
+            border: 2px solid var(--highlight-border);
+            box-shadow: var(--highlight-shadow);
+            animation: pulseHighlight 2s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .schedule-item.next::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0) 45%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0) 55%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+
+        .schedule-item.passed {
+            background: var(--passed-bg);
+            color: var(--passed-color);
+        }
+
+        .schedule-item.passed .time,
+        .schedule-item.passed .station,
+        .schedule-item.passed .transit,
+        .schedule-item.passed .transit-duration,
+        .schedule-item.passed .total-duration,
+        .schedule-item.passed .train-type {
+            color: var(--passed-color);
+        }
+
+        .schedule-item.upcoming {
+            background: var(--upcoming-bg);
+        }
+
+        .time {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .station {
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+
+        .train-type {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .bias {
+            background-color: rgba(108, 92, 231, 0.1);
+            color: var(--bias-color);
+            border: 1px solid var(--bias-color);
+        }
+
+        .krl {
+            background-color: rgba(0, 184, 148, 0.1);
+            color: var(--krl-color);
+            border: 1px solid var(--krl-color);
+        }
+
+        .duration {
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .transit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--transit-color);
+            font-weight: 600;
+        }
+
+        .transit-duration {
+            font-size: 0.9rem;
+            margin-top: 3px;
+        }
+
+        .total-duration {
+            font-weight: 600;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .schedule-table-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            padding: 10px 20px;
+            font-weight: 600;
+            color: var(--light-text);
+            font-size: 0.9rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { 
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes pulseHighlight {
+            0% { box-shadow: 0 0 15px rgba(74, 107, 223, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(74, 107, 223, 0.5); }
+            100% { box-shadow: 0 0 15px rgba(74, 107, 223, 0.3); }
+        }
+
+        @keyframes shine {
+            0% { left: -50%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--light-text);
+            font-size: 0.9rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .countdown-timer {
+                font-size: 3rem;
+            }
+            
+            .tab, .nav-button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .schedule-container {
+                padding: 20px;
+            }
+            
+            .schedule-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .schedule-table-header {
+                display: none;
+            }
+            
+            .time {
+                font-size: 1rem;
+            }
+            
+            .station {
+                font-size: 0.8rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="page-title">Jadwal Lengkap Sragen-Jogja</h1>
+            <p class="subtitle" id="page-subtitle">KRL + Kereta BIAS | Transit di Solo Jebres</p>
+        </header>
+
+        <div class="legend" id="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: var(--bias-color);"></div>
+                <span>Kereta BIAS</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: var(--krl-color);"></div>
+                <span>KRL Commuter</span>
+            </div>
+        </div>
+
+        <div id="sragen-jogja-content">
+            <div class="next-train" id="next-train">
+                <div class="next-train-label">PERJALANAN BERIKUTNYA</div>
+                <div class="countdown-timer" id="countdown-timer"></div>
+                <div class="next-departure-info" id="next-departure-info"></div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" id="pergi-tab">Pergi (Sragen → Jogja)</button>
+                <button class="tab" id="pulang-tab">Pulang (Jogja → Sragen)</button>
+            </div>
+
+            <div class="schedule-container" id="pergi-schedule">
+                <div class="schedule-header">
+                    <div class="route">Sragen → Solo Jebres → Jogja</div>
+                    <div class="current-time" id="current-time-pergi"></div>
+                </div>
+                
+                <div class="schedule-table-header">
+                    <div>Berangkat</div>
+                    <div>Transit Solo Jebres</div>
+                    <div>Tiba di Jogja</div>
+                    <div>Total Waktu</div>
+                </div>
+                
+                <div class="schedule-list" id="pergi-list">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="schedule-container" id="pulang-schedule" style="display: none;">
+                <div class="schedule-header">
+                    <div class="route">Jogja → Solo Jebres → Sragen</div>
+                    <div class="current-time" id="current-time-pulang"></div>
+                </div>
+                
+                <div class="schedule-table-header">
+                    <div>Berangkat</div>
+                    <div>Transit Solo Jebres</div>
+                    <div>Tiba di Sragen</div>
+                    <div>Total Waktu</div>
+                </div>
+                
+                <div class="schedule-list" id="pulang-list">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div id="krl-content" style="display: none;">
+            <div class="next-train" id="krl-next-train">
+                <div class="next-train-label">KRL BERIKUTNYA</div>
+                <div class="countdown-timer" id="krl-countdown-timer"></div>
+                <div class="next-departure-info" id="krl-next-departure-info"></div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="krl-progress-bar"></div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" id="krl-pergi-tab">Pergi (Solo → Jogja)</button>
+                <button class="tab" id="krl-pulang-tab">Pulang (Jogja → Solo)</button>
+            </div>
+
+            <div class="schedule-container" id="krl-pergi-schedule">
+                <div class="schedule-header">
+                    <div class="route">Solo Balapan → Jogja</div>
+                    <div class="current-time" id="krl-current-time-pergi"></div>
+                </div>
+                
+                <div class="schedule-list" id="krl-pergi-list">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="schedule-container" id="krl-pulang-schedule" style="display: none;">
+                <div class="schedule-header">
+                    <div class="route">Jogja → Solo Balapan</div>
+                    <div class="current-time" id="krl-current-time-pulang"></div>
+                </div>
+                
+                <div class="schedule-list" id="krl-pulang-list">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-button" id="toggle-schedule-btn">JADWAL LENGKAP KRL SOLO-JOGJA</button>
+        </div>
+
+        <footer>
+            <p>Jadwal Perjalanan Kereta | Diperbarui secara real-time</p>
+        </footer>
+    </div>
+
+    <script>
+        // Schedule data for Sragen-Jogja
+        const sragenSchedules = {
+            pergi: [
+                {
+                    bias: { departure: '7:09', arrival: '7:32', from: 'Sragen', to: 'Solo Jebres' },
+                    krl: { departure: '9:02', arrival: '10:27', from: 'Solo Jebres', to: 'Jogja' },
+                    transit: 90, // in minutes
+                    total: 198 // in minutes
+                },
+                {
+                    bias: { departure: '10:06', arrival: '10:28', from: 'Sragen', to: 'Solo Jebres' },
+                    krl: { departure: '10:46', arrival: '11:59', from: 'Solo Jebres', to: 'Jogja' },
+                    transit: 18,
+                    total: 113
+                },
+                {
+                    bias: { departure: '12:44', arrival: '13:07', from: 'Sragen', to: 'Solo Jebres' },
+                    krl: { departure: '13:49', arrival: '15:06', from: 'Solo Jebres', to: 'Jogja' },
+                    transit: 42,
+                    total: 142
+                },
+                {
+                    bias: { departure: '16:27', arrival: '16:51', from: 'Sragen', to: 'Solo Jebres' },
+                    krl: { departure: '18:11', arrival: '19:25', from: 'Solo Jebres', to: 'Jogja' },
+                    transit: 80,
+                    total: 178
+                },
+                {
+                    bias: { departure: '17:31', arrival: '17:54', from: 'Sragen', to: 'Solo Jebres' },
+                    krl: { departure: '18:11', arrival: '19:25', from: 'Solo Jebres', to: 'Jogja' },
+                    transit: 17,
+                    total: 114
+                }
+            ],
+            pulang: [
+                {
+                    krl: { departure: '5:05', arrival: '6:21', from: 'Jogja', to: 'Solo Jebres' },
+                    bias: { departure: '6:29', arrival: '6:50', from: 'Solo Jebres', to: 'Sragen' },
+                    transit: 8,
+                    total: 105
+                },
+                {
+                    krl: { departure: '7:05', arrival: '8:23', from: 'Jogja', to: 'Solo Jebres' },
+                    bias: { departure: '9:04', arrival: '9:25', from: 'Solo Jebres', to: 'Sragen' },
+                    transit: 41,
+                    total: 140
+                },
+                {
+                    krl: { departure: '10:56', arrival: '12:12', from: 'Jogja', to: 'Solo Jebres' },
+                    bias: { departure: '12:29', arrival: '12:49', from: 'Solo Jebres', to: 'Sragen' },
+                    transit: 17,
+                    total: 113
+                },
+                {
+                    krl: { departure: '12:07', arrival: '13:24', from: 'Jogja', to: 'Solo Jebres' },
+                    bias: { departure: '14:34', arrival: '14:55', from: 'Solo Jebres', to: 'Sragen' },
+                    transit: 70,
+                    total: 168
+                },
+                {
+                    krl: { departure: '16:10', arrival: '17:40', from: 'Jogja', to: 'Solo Jebres' },
+                    bias: { departure: '18:00', arrival: '18:21', from: 'Solo Jebres', to: 'Sragen' },
+                    transit: 20,
+                    total: 131
+                }
+            ]
+        };
+
+        // Schedule data for KRL Solo-Jogja
+        const krlSchedules = {
+            pergi: [
+                { departure: '5:00', arrival: '6:23' },
+                { departure: '6:05', arrival: '7:29' },
+                { departure: '7:15', arrival: '8:39' },
+                { departure: '8:56', arrival: '10:27' },
+                { departure: '10:40', arrival: '11:59' },
+                { departure: '12:50', arrival: '14:12' },
+                { departure: '13:43', arrival: '15:06' },
+                { departure: '15:35', arrival: '16:56' },
+                { departure: '16:35', arrival: '17:55' },
+                { departure: '18:05', arrival: '19:25' },
+                { departure: '19:45', arrival: '21:09' },
+                { departure: '20:42', arrival: '22:01' }
+            ],
+            pulang: [
+                { departure: '5:05', arrival: '6:26' },
+                { departure: '6:00', arrival: '7:20' },
+                { departure: '7:05', arrival: '8:29' },
+                { departure: '7:54', arrival: '9:18' },
+                { departure: '8:49', arrival: '10:12' },
+                { departure: '10:56', arrival: '12:18' },
+                { departure: '12:07', arrival: '13:30' },
+                { departure: '13:57', arrival: '15:21' },
+                { departure: '15:01', arrival: '16:25' },
+                { departure: '16:10', arrival: '17:45' },
+                { departure: '17:35', arrival: '18:57' },
+                { departure: '18:08', arrival: '19:28' },
+                { departure: '20:15', arrival: '21:40' },
+                { departure: '21:20', arrival: '22:43' },
+                { departure: '22:35', arrival: '23:54' }
+            ]
+        };
+
+        // DOM elements
+        const toggleScheduleBtn = document.getElementById('toggle-schedule-btn');
+        const sragenContent = document.getElementById('sragen-jogja-content');
+        const krlContent = document.getElementById('krl-content');
+        const pageTitle = document.getElementById('page-title');
+        const pageSubtitle = document.getElementById('page-subtitle');
+        const legend = document.getElementById('legend');
+
+        // Sragen-Jogja elements
+        const pergiTab = document.getElementById('pergi-tab');
+        const pulangTab = document.getElementById('pulang-tab');
+        const pergiSchedule = document.getElementById('pergi-schedule');
+        const pulangSchedule = document.getElementById('pulang-schedule');
+        const pergiList = document.getElementById('pergi-list');
+        const pulangList = document.getElementById('pulang-list');
+        const currentTimePergi = document.getElementById('current-time-pergi');
+        const currentTimePulang = document.getElementById('current-time-pulang');
+        const countdownTimer = document.getElementById('countdown-timer');
+        const nextDepartureInfo = document.getElementById('next-departure-info');
+        const progressBar = document.getElementById('progress-bar');
+
+        // KRL Solo-Jogja elements
+        const krlPergiTab = document.getElementById('krl-pergi-tab');
+        const krlPulangTab = document.getElementById('krl-pulang-tab');
+        const krlPergiSchedule = document.getElementById('krl-pergi-schedule');
+        const krlPulangSchedule = document.getElementById('krl-pulang-schedule');
+        const krlPergiList = document.getElementById('krl-pergi-list');
+        const krlPulangList = document.getElementById('krl-pulang-list');
+        const krlCurrentTimePergi = document.getElementById('krl-current-time-pergi');
+        const krlCurrentTimePulang = document.getElementById('krl-current-time-pulang');
+        const krlCountdownTimer = document.getElementById('krl-countdown-timer');
+        const krlNextDepartureInfo = document.getElementById('krl-next-departure-info');
+        const krlProgressBar = document.getElementById('krl-progress-bar');
+
+        // Toggle between schedules
+        let showingKrlSchedule = false;
+        toggleScheduleBtn.addEventListener('click', () => {
+            showingKrlSchedule = !showingKrlSchedule;
+            
+            if (showingKrlSchedule) {
+                sragenContent.style.display = 'none';
+                krlContent.style.display = 'block';
+                pageTitle.textContent = 'Jadwal Lengkap KRL Solo-Jogja';
+                pageSubtitle.textContent = 'Commuter Line Solo Balapan - Yogyakarta';
+                legend.style.display = 'none';
+                toggleScheduleBtn.textContent = 'JADWAL KERETA SRAGEN-JOGJA';
+                updateKrlAllSchedules();
+            } else {
+                sragenContent.style.display = 'block';
+                krlContent.style.display = 'none';
+                pageTitle.textContent = 'Jadwal Lengkap Sragen-Jogja';
+                pageSubtitle.textContent = 'KRL + Kereta BIAS | Transit di Solo Jebres';
+                legend.style.display = 'flex';
+                toggleScheduleBtn.textContent = 'JADWAL LENGKAP KRL SOLO-JOGJA';
+                updateAllSchedules();
+            }
+        });
+
+        // Helper function to parse time string to Date object
+        function parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            const now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0);
+        }
+
+        // Helper function to format time difference
+        function formatTimeDiff(diff) {
+            if (diff <= 0) return 'Telah berangkat';
+            
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            if (hours > 0) {
+                return `${hours} jam ${minutes} menit`;
+            } else if (minutes > 0) {
+                return `${minutes} menit ${seconds} detik`;
+            } else {
+                return `${seconds} detik`;
+            }
+        }
+
+        // Format duration in minutes to HH jam MM menit
+        function formatDuration(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours > 0 ? hours + ' jam ' : ''}${mins} menit`;
+        }
+
+        // Update progress bar
+        function updateProgressBar(barElement, diff) {
+            const totalTwoHours = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+            let remainingTime = Math.min(diff, totalTwoHours);
+            let percentage = (remainingTime / totalTwoHours) * 100;
+            
+            // Change color based on remaining time
+            if (percentage < 25) {
+                barElement.style.background = 'var(--progress-danger)';
+            } else if (percentage < 50) {
+                barElement.style.background = 'var(--progress-warning)';
+            } else {
+                barElement.style.background = 'var(--progress-fill)';
+            }
+            
+            barElement.style.width = `${percentage}%`;
+        }
+
+        // Sragen-Jogja functions
+        function updateNextTrainInfo(type) {
+            const schedule = sragenSchedules[type];
+            const now = new Date();
+            let nextJourney = null;
+            
+            // Find the next journey
+            for (const item of schedule) {
+                const depTime = parseTime(type === 'pergi' ? item.bias.departure : item.krl.departure);
+                const timeDiff = depTime - now;
+                
+                if (timeDiff > 0) {
+                    nextJourney = { ...item, timeDiff };
+                    break;
+                }
+            }
+            
+            if (nextJourney) {
+                countdownTimer.textContent = formatTimeDiff(nextJourney.timeDiff);
+                
+                if (type === 'pergi') {
+                    nextDepartureInfo.innerHTML = `
+                        <strong>${nextJourney.bias.departure}</strong> dari Sragen (BIAS) → 
+                        Transit: <strong>${formatDuration(nextJourney.transit)}</strong> → 
+                        Tiba <strong>${nextJourney.krl.arrival}</strong> di Jogja (KRL)
+                    `;
+                } else {
+                    nextDepartureInfo.innerHTML = `
+                        <strong>${nextJourney.krl.departure}</strong> dari Jogja (KRL) → 
+                        Transit: <strong>${formatDuration(nextJourney.transit)}</strong> → 
+                        Tiba <strong>${nextJourney.bias.arrival}</strong> di Sragen (BIAS)
+                    `;
+                }
+                
+                updateProgressBar(progressBar, nextJourney.timeDiff);
+            } else {
+                countdownTimer.textContent = 'Tidak ada jadwal';
+                nextDepartureInfo.textContent = 'Tidak ada jadwal berikutnya hari ini';
+                progressBar.style.width = '0%';
+            }
+        }
+
+        function updateSchedule(listElement, schedule, currentTimeElement, type) {
+            listElement.innerHTML = '';
+            const now = new Date();
+            let nextFound = false;
+            
+            // Update current time display
+            currentTimeElement.textContent = `Waktu sekarang: ${now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`;
+            
+            schedule.forEach((item) => {
+                const firstDepTime = parseTime(type === 'pergi' ? item.bias.departure : item.krl.departure);
+                const timeDiff = firstDepTime - now;
+                const isPassed = timeDiff < 0;
+                const isNext = !isPassed && !nextFound;
+                
+                if (isNext) nextFound = true;
+                
+                const scheduleItem = document.createElement('div');
+                scheduleItem.className = `schedule-item ${isNext ? 'next' : ''} ${isPassed ? 'passed' : 'upcoming'}`;
+                
+                if (type === 'pergi') {
+                    scheduleItem.innerHTML = `
+                        <div>
+                            <div class="time">${item.bias.departure}</div>
+                            <div class="station">${item.bias.from}</div>
+                            <div class="train-type bias">BIAS</div>
+                        </div>
+                        <div class="transit">
+                            <div>${item.bias.arrival} → ${item.krl.departure}</div>
+                            <div class="transit-duration">Transit: ${formatDuration(item.transit)}</div>
+                        </div>
+                        <div>
+                            <div class="time">${item.krl.arrival}</div>
+                            <div class="station">${item.krl.to}</div>
+                            <div class="train-type krl">KRL</div>
+                        </div>
+                        <div class="total-duration">${formatDuration(item.total)}</div>
+                    `;
+                } else {
+                    scheduleItem.innerHTML = `
+                        <div>
+                            <div class="time">${item.krl.departure}</div>
+                            <div class="station">${item.krl.from}</div>
+                            <div class="train-type krl">KRL</div>
+                        </div>
+                        <div class="transit">
+                            <div>${item.krl.arrival} → ${item.bias.departure}</div>
+                            <div class="transit-duration">Transit: ${formatDuration(item.transit)}</div>
+                        </div>
+                        <div>
+                            <div class="time">${item.bias.arrival}</div>
+                            <div class="station">${item.bias.to}</div>
+                            <div class="train-type bias">BIAS</div>
+                        </div>
+                        <div class="total-duration">${formatDuration(item.total)}</div>
+                    `;
+                }
+                
+                listElement.appendChild(scheduleItem);
+            });
+        }
+
+        function updateAllSchedules() {
+            const activeTab = pergiTab.classList.contains('active') ? 'pergi' : 'pulang';
+            updateSchedule(pergiList, sragenSchedules.pergi, currentTimePergi, 'pergi');
+            updateSchedule(pulangList, sragenSchedules.pulang, currentTimePulang, 'pulang');
+            updateNextTrainInfo(activeTab);
+        }
+
+        // KRL Solo-Jogja functions
+        function updateKrlNextTrainInfo(type) {
+            const schedule = krlSchedules[type];
+            const now = new Date();
+            let nextTrain = null;
+            
+            // Find the next train
+            for (const item of schedule) {
+                const depTime = parseTime(item.departure);
+                const timeDiff = depTime - now;
+                
+                if (timeDiff > 0) {
+                    nextTrain = { ...item, timeDiff };
+                    break;
+                }
+            }
+            
+            if (nextTrain) {
+                krlCountdownTimer.textContent = formatTimeDiff(nextTrain.timeDiff);
+                krlNextDepartureInfo.innerHTML = `
+                    <strong>${nextTrain.departure}</strong> dari ${type === 'pergi' ? 'Solo Balapan' : 'Jogja'} → 
+                    Tiba <strong>${nextTrain.arrival}</strong> di ${type === 'pergi' ? 'Jogja' : 'Solo Balapan'}
+                `;
+                updateProgressBar(krlProgressBar, nextTrain.timeDiff);
+            } else {
+                krlCountdownTimer.textContent = 'Tidak ada jadwal';
+                krlNextDepartureInfo.textContent = 'Tidak ada jadwal berikutnya hari ini';
+                krlProgressBar.style.width = '0%';
+            }
+        }
+
+        function updateKrlSchedule(listElement, schedule, currentTimeElement, type) {
+            listElement.innerHTML = '';
+            const now = new Date();
+            let nextFound = false;
+            
+            // Update current time display
+            currentTimeElement.textContent = `Waktu sekarang: ${now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`;
+            
+            schedule.forEach((item) => {
+                const depTime = parseTime(item.departure);
+                const timeDiff = depTime - now;
+                const isPassed = timeDiff < 0;
+                const isNext = !isPassed && !nextFound;
+                
+                if (isNext) nextFound = true;
+                
+                const scheduleItem = document.createElement('div');
+                scheduleItem.className = `schedule-item ${isNext ? 'next' : ''} ${isPassed ? 'passed' : 'upcoming'}`;
+                
+                scheduleItem.innerHTML = `
+                    <div>
+                        <div class="time">${item.departure}</div>
+                        <div class="station">${type === 'pergi' ? 'Solo Balapan' : 'Jogja'}</div>
+                    </div>
+                    <div class="countdown">${formatTimeDiff(timeDiff)}</div>
+                    <div>
+                        <div class="time">${item.arrival}</div>
+                        <div class="station">${type === 'pergi' ? 'Jogja' : 'Solo Balapan'}</div>
+                    </div>
+                `;
+                
+                listElement.appendChild(scheduleItem);
+            });
+        }
+
+        function updateKrlAllSchedules() {
+            const activeTab = krlPergiTab.classList.contains('active') ? 'pergi' : 'pulang';
+            updateKrlSchedule(krlPergiList, krlSchedules.pergi, krlCurrentTimePergi, 'pergi');
+            updateKrlSchedule(krlPulangList, krlSchedules.pulang, krlCurrentTimePulang, 'pulang');
+            updateKrlNextTrainInfo(activeTab);
+        }
+
+        // Tab switching for Sragen-Jogja
+        pergiTab.addEventListener('click', () => {
+            pergiTab.classList.add('active');
+            pulangTab.classList.remove('active');
+            pergiSchedule.style.display = 'block';
+            pulangSchedule.style.display = 'none';
+            updateNextTrainInfo('pergi');
+        });
+
+        pulangTab.addEventListener('click', () => {
+            pulangTab.classList.add('active');
+            pergiTab.classList.remove('active');
+            pulangSchedule.style.display = 'block';
+            pergiSchedule.style.display = 'none';
+            updateNextTrainInfo('pulang');
+        });
+
+        // Tab switching for KRL Solo-Jogja
+        krlPergiTab.addEventListener('click', () => {
+            krlPergiTab.classList.add('active');
+            krlPulangTab.classList.remove('active');
+            krlPergiSchedule.style.display = 'block';
+            krlPulangSchedule.style.display = 'none';
+            updateKrlNextTrainInfo('pergi');
+        });
+
+        krlPulangTab.addEventListener('click', () => {
+            krlPulangTab.classList.add('active');
+            krlPergiTab.classList.remove('active');
+            krlPulangSchedule.style.display = 'block';
+            krlPergiSchedule.style.display = 'none';
+            updateKrlNextTrainInfo('pulang');
+        });
+
+        // Initial update
+        updateAllSchedules();
+
+        // Update every second for smooth countdown
+        setInterval(() => {
+            if (showingKrlSchedule) {
+                updateKrlAllSchedules();
+            } else {
+                updateAllSchedules();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
