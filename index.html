@@ -27,6 +27,7 @@
             --highlight-bg: linear-gradient(135deg, rgba(74, 107, 223, 0.15) 0%, rgba(100, 221, 223, 0.15) 100%);
             --highlight-border: #4a6bdf;
             --highlight-shadow: 0 0 15px rgba(74, 107, 223, 0.3);
+            --divider-color: #eee;
         }
 
         * {
@@ -180,7 +181,7 @@
             justify-content: space-between;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--divider-color);
         }
 
         .route {
@@ -188,19 +189,14 @@
             font-size: 1.2rem;
         }
 
-        .current-time {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
         .schedule-list {
             display: grid;
-            gap: 15px;
+            gap: 10px;
         }
 
         .schedule-item {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             align-items: center;
             padding: 15px 20px;
             border-radius: 12px;
@@ -208,6 +204,11 @@
             position: relative;
             overflow: hidden;
             background: var(--secondary);
+            border-bottom: 1px solid var(--divider-color);
+        }
+
+        .schedule-item:last-child {
+            border-bottom: none;
         }
 
         .schedule-item:hover {
@@ -220,27 +221,6 @@
             border: 2px solid var(--highlight-border);
             box-shadow: var(--highlight-shadow);
             animation: pulseHighlight 2s infinite;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .schedule-item.next::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0) 45%,
-                rgba(255, 255, 255, 0.8) 50%,
-                rgba(255, 255, 255, 0) 55%,
-                rgba(255, 255, 255, 0) 100%
-            );
-            transform: rotate(30deg);
-            animation: shine 3s infinite;
         }
 
         .schedule-item.passed {
@@ -261,9 +241,16 @@
             background: var(--upcoming-bg);
         }
 
+        .time-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .time {
             font-size: 1.1rem;
             font-weight: 600;
+            text-align: right;
         }
 
         .station {
@@ -276,7 +263,7 @@
             padding: 3px 8px;
             border-radius: 12px;
             font-weight: 600;
-            text-align: center;
+            text-align: left;
         }
 
         .bias {
@@ -315,14 +302,23 @@
             text-align: center;
         }
 
+        .countdown {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
         .schedule-table-header {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             padding: 10px 20px;
             font-weight: 600;
             color: var(--light-text);
             font-size: 0.9rem;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--divider-color);
         }
 
         .nav-buttons {
@@ -391,12 +387,6 @@
             100% { box-shadow: 0 0 15px rgba(74, 107, 223, 0.3); }
         }
 
-        @keyframes shine {
-            0% { left: -50%; }
-            20% { left: 100%; }
-            100% { left: 100%; }
-        }
-
         footer {
             text-align: center;
             margin-top: 30px;
@@ -450,24 +440,15 @@
 <body>
     <div class="container">
         <header>
-            <h1 id="page-title">Jadwal Lengkap Sragen-Jogja</h1>
-            <p class="subtitle" id="page-subtitle">KRL + Kereta BIAS | Transit di Solo Jebres</p>
+            <h1 id="page-title">🚂 Jadwal Kereta</h1>
+           
         </header>
 
-        <div class="legend" id="legend">
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: var(--bias-color);"></div>
-                <span>Kereta BIAS</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background-color: var(--krl-color);"></div>
-                <span>KRL Commuter</span>
-            </div>
-        </div>
+        
 
         <div id="sragen-jogja-content">
             <div class="next-train" id="next-train">
-                <div class="next-train-label">PERJALANAN BERIKUTNYA</div>
+                <div class="next-train-label">🚂 Jadwal Kereta Terdekat</div>
                 <div class="countdown-timer" id="countdown-timer"></div>
                 <div class="next-departure-info" id="next-departure-info"></div>
                 <div class="progress-container">
@@ -476,21 +457,19 @@
             </div>
 
             <div class="tabs">
-                <button class="tab active" id="pergi-tab">Pergi (Sragen → Jogja)</button>
-                <button class="tab" id="pulang-tab">Pulang (Jogja → Sragen)</button>
+                <button class="tab active" id="pergi-tab">SRAGEN → JOGJA</button>
+                <button class="tab" id="pulang-tab">JOGJA → SRAGEN</button>
             </div>
 
             <div class="schedule-container" id="pergi-schedule">
                 <div class="schedule-header">
-                    <div class="route">Sragen → Solo Jebres → Jogja</div>
-                    <div class="current-time" id="current-time-pergi"></div>
+                    <div class="route">📍 STASIUN 1️⃣ Sragen 2️⃣ Solo Jebres 3️⃣ Jogja</div>
                 </div>
                 
                 <div class="schedule-table-header">
                     <div>Berangkat</div>
-                    <div>Transit Solo Jebres</div>
+                    <div>Transit</div>
                     <div>Tiba di Jogja</div>
-                    <div>Total Waktu</div>
                 </div>
                 
                 <div class="schedule-list" id="pergi-list">
@@ -500,15 +479,13 @@
 
             <div class="schedule-container" id="pulang-schedule" style="display: none;">
                 <div class="schedule-header">
-                    <div class="route">Jogja → Solo Jebres → Sragen</div>
-                    <div class="current-time" id="current-time-pulang"></div>
+                    <div class="route">📍 Jogja → Solo Jebres → Sragen</div>
                 </div>
                 
                 <div class="schedule-table-header">
                     <div>Berangkat</div>
-                    <div>Transit Solo Jebres</div>
+                    <div>Transit</div>
                     <div>Tiba di Sragen</div>
-                    <div>Total Waktu</div>
                 </div>
                 
                 <div class="schedule-list" id="pulang-list">
@@ -519,7 +496,7 @@
 
         <div id="krl-content" style="display: none;">
             <div class="next-train" id="krl-next-train">
-                <div class="next-train-label">KRL BERIKUTNYA</div>
+                <div class="next-train-label">Jadwal KRL Terdekat</div>
                 <div class="countdown-timer" id="krl-countdown-timer"></div>
                 <div class="next-departure-info" id="krl-next-departure-info"></div>
                 <div class="progress-container">
@@ -528,14 +505,13 @@
             </div>
 
             <div class="tabs">
-                <button class="tab active" id="krl-pergi-tab">Pergi (Solo → Jogja)</button>
-                <button class="tab" id="krl-pulang-tab">Pulang (Jogja → Solo)</button>
+                <button class="tab active" id="krl-pergi-tab">PALUR → JOGJA</button>
+                <button class="tab" id="krl-pulang-tab">JOGJA → PALUR</button>
             </div>
 
             <div class="schedule-container" id="krl-pergi-schedule">
                 <div class="schedule-header">
-                    <div class="route">Solo Balapan → Jogja</div>
-                    <div class="current-time" id="krl-current-time-pergi"></div>
+                    <div class="route">🚂 PALUR → JOGJA</div>
                 </div>
                 
                 <div class="schedule-list" id="krl-pergi-list">
@@ -545,8 +521,7 @@
 
             <div class="schedule-container" id="krl-pulang-schedule" style="display: none;">
                 <div class="schedule-header">
-                    <div class="route">Jogja → Solo Balapan</div>
-                    <div class="current-time" id="krl-current-time-pulang"></div>
+                    <div class="route">🚂 JOGJA → PALUR</div>
                 </div>
                 
                 <div class="schedule-list" id="krl-pulang-list">
@@ -556,11 +531,11 @@
         </div>
 
         <div class="nav-buttons">
-            <button class="nav-button" id="toggle-schedule-btn">JADWAL LENGKAP KRL SOLO-JOGJA</button>
+            <button class="nav-button" id="toggle-schedule-btn">🔍 KRL PALUR-JOGJA</button>
         </div>
 
         <footer>
-            <p>Jadwal Perjalanan Kereta | Diperbarui secara real-time</p>
+            <p>©️Copyright 2025 by Endro Jagovisual</p>
         </footer>
     </div>
 
@@ -569,64 +544,64 @@
         const sragenSchedules = {
             pergi: [
                 {
-                    bias: { departure: '7:09', arrival: '7:32', from: 'Sragen', to: 'Solo Jebres' },
-                    krl: { departure: '9:02', arrival: '10:27', from: 'Solo Jebres', to: 'Jogja' },
+                    bias: { departure: '7:09', arrival: '7:32', from: 'Sragen', to: 'Palur' },
+                    krl: { departure: '9:02', arrival: '10:27', from: 'Palur', to: 'Jogja' },
                     transit: 90, // in minutes
                     total: 198 // in minutes
                 },
                 {
-                    bias: { departure: '10:06', arrival: '10:28', from: 'Sragen', to: 'Solo Jebres' },
-                    krl: { departure: '10:46', arrival: '11:59', from: 'Solo Jebres', to: 'Jogja' },
+                    bias: { departure: '10:06', arrival: '10:28', from: 'Sragen', to: 'Palur' },
+                    krl: { departure: '10:46', arrival: '11:59', from: 'Palur', to: 'Jogja' },
                     transit: 18,
                     total: 113
                 },
                 {
-                    bias: { departure: '12:44', arrival: '13:07', from: 'Sragen', to: 'Solo Jebres' },
-                    krl: { departure: '13:49', arrival: '15:06', from: 'Solo Jebres', to: 'Jogja' },
+                    bias: { departure: '12:44', arrival: '13:07', from: 'Sragen', to: 'Palur' },
+                    krl: { departure: '13:49', arrival: '15:06', from: 'Palur', to: 'Jogja' },
                     transit: 42,
                     total: 142
                 },
                 {
-                    bias: { departure: '16:27', arrival: '16:51', from: 'Sragen', to: 'Solo Jebres' },
-                    krl: { departure: '18:11', arrival: '19:25', from: 'Solo Jebres', to: 'Jogja' },
+                    bias: { departure: '16:27', arrival: '16:51', from: 'Sragen', to: 'Palur' },
+                    krl: { departure: '18:11', arrival: '19:25', from: 'Palur', to: 'Jogja' },
                     transit: 80,
                     total: 178
                 },
                 {
-                    bias: { departure: '17:31', arrival: '17:54', from: 'Sragen', to: 'Solo Jebres' },
-                    krl: { departure: '18:11', arrival: '19:25', from: 'Solo Jebres', to: 'Jogja' },
+                    bias: { departure: '17:31', arrival: '17:54', from: 'Sragen', to: 'Palur' },
+                    krl: { departure: '18:11', arrival: '19:25', from: 'Palur', to: 'Jogja' },
                     transit: 17,
                     total: 114
                 }
             ],
             pulang: [
                 {
-                    krl: { departure: '5:05', arrival: '6:21', from: 'Jogja', to: 'Solo Jebres' },
-                    bias: { departure: '6:29', arrival: '6:50', from: 'Solo Jebres', to: 'Sragen' },
+                    krl: { departure: '5:05', arrival: '6:21', from: 'Jogja', to: 'Palur' },
+                    bias: { departure: '6:29', arrival: '6:50', from: 'Palur', to: 'Sragen' },
                     transit: 8,
                     total: 105
                 },
                 {
-                    krl: { departure: '7:05', arrival: '8:23', from: 'Jogja', to: 'Solo Jebres' },
-                    bias: { departure: '9:04', arrival: '9:25', from: 'Solo Jebres', to: 'Sragen' },
+                    krl: { departure: '7:05', arrival: '8:23', from: 'Jogja', to: 'Palur' },
+                    bias: { departure: '9:04', arrival: '9:25', from: 'Palur', to: 'Sragen' },
                     transit: 41,
                     total: 140
                 },
                 {
-                    krl: { departure: '10:56', arrival: '12:12', from: 'Jogja', to: 'Solo Jebres' },
-                    bias: { departure: '12:29', arrival: '12:49', from: 'Solo Jebres', to: 'Sragen' },
+                    krl: { departure: '10:56', arrival: '12:12', from: 'Jogja', to: 'Palur' },
+                    bias: { departure: '12:29', arrival: '12:49', from: 'Palur', to: 'Sragen' },
                     transit: 17,
                     total: 113
                 },
                 {
-                    krl: { departure: '12:07', arrival: '13:24', from: 'Jogja', to: 'Solo Jebres' },
-                    bias: { departure: '14:34', arrival: '14:55', from: 'Solo Jebres', to: 'Sragen' },
+                    krl: { departure: '12:07', arrival: '13:24', from: 'Jogja', to: 'Palur' },
+                    bias: { departure: '14:34', arrival: '14:55', from: 'Palur', to: 'Sragen' },
                     transit: 70,
                     total: 168
                 },
                 {
-                    krl: { departure: '16:10', arrival: '17:40', from: 'Jogja', to: 'Solo Jebres' },
-                    bias: { departure: '18:00', arrival: '18:21', from: 'Solo Jebres', to: 'Sragen' },
+                    krl: { departure: '16:10', arrival: '17:40', from: 'Jogja', to: 'Palur' },
+                    bias: { departure: '18:00', arrival: '18:21', from: 'Palur', to: 'Sragen' },
                     transit: 20,
                     total: 131
                 }
@@ -683,8 +658,6 @@
         const pulangSchedule = document.getElementById('pulang-schedule');
         const pergiList = document.getElementById('pergi-list');
         const pulangList = document.getElementById('pulang-list');
-        const currentTimePergi = document.getElementById('current-time-pergi');
-        const currentTimePulang = document.getElementById('current-time-pulang');
         const countdownTimer = document.getElementById('countdown-timer');
         const nextDepartureInfo = document.getElementById('next-departure-info');
         const progressBar = document.getElementById('progress-bar');
@@ -696,8 +669,6 @@
         const krlPulangSchedule = document.getElementById('krl-pulang-schedule');
         const krlPergiList = document.getElementById('krl-pergi-list');
         const krlPulangList = document.getElementById('krl-pulang-list');
-        const krlCurrentTimePergi = document.getElementById('krl-current-time-pergi');
-        const krlCurrentTimePulang = document.getElementById('krl-current-time-pulang');
         const krlCountdownTimer = document.getElementById('krl-countdown-timer');
         const krlNextDepartureInfo = document.getElementById('krl-next-departure-info');
         const krlProgressBar = document.getElementById('krl-progress-bar');
@@ -710,18 +681,18 @@
             if (showingKrlSchedule) {
                 sragenContent.style.display = 'none';
                 krlContent.style.display = 'block';
-                pageTitle.textContent = 'Jadwal Lengkap KRL Solo-Jogja';
-                pageSubtitle.textContent = 'Commuter Line Solo Balapan - Yogyakarta';
+                pageTitle.textContent = 'Jadwal Lengkap KRL Palur-Jogja';
+                pageSubtitle.textContent = 'Commuter Line Palur - Yogyakarta';
                 legend.style.display = 'none';
-                toggleScheduleBtn.textContent = 'JADWAL KERETA SRAGEN-JOGJA';
+                toggleScheduleBtn.textContent = '🔍 KERETA SRAGEN-JOGJA';
                 updateKrlAllSchedules();
             } else {
                 sragenContent.style.display = 'block';
                 krlContent.style.display = 'none';
                 pageTitle.textContent = 'Jadwal Lengkap Sragen-Jogja';
-                pageSubtitle.textContent = 'KRL + Kereta BIAS | Transit di Solo Jebres';
+                pageSubtitle.textContent = 'KRL + Kereta BIAS | Transit di Palur';
                 legend.style.display = 'flex';
-                toggleScheduleBtn.textContent = 'JADWAL LENGKAP KRL SOLO-JOGJA';
+                toggleScheduleBtn.textContent = '🔍 KRL PALUR-JOGJA';
                 updateAllSchedules();
             }
         });
@@ -735,18 +706,18 @@
 
         // Helper function to format time difference
         function formatTimeDiff(diff) {
-            if (diff <= 0) return 'Telah berangkat';
+            if (diff <= 0) return 'Berangkat';
             
             const hours = Math.floor(diff / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
             
             if (hours > 0) {
-                return `${hours} jam ${minutes} menit`;
+                return ` ${hours} jam ${minutes} menit`;
             } else if (minutes > 0) {
-                return `${minutes} menit ${seconds} detik`;
+                return ` ${minutes} menit ${seconds} detik`;
             } else {
-                return `${seconds} detik`;
+                return ` ${seconds} detik`;
             }
         }
 
@@ -754,7 +725,7 @@
         function formatDuration(minutes) {
             const hours = Math.floor(minutes / 60);
             const mins = minutes % 60;
-            return `${hours > 0 ? hours + ' jam ' : ''}${mins} menit`;
+            return `⏳ ${hours > 0 ? hours + ' jam ' : ''}${mins} menit`;
         }
 
         // Update progress bar
@@ -811,19 +782,16 @@
                 
                 updateProgressBar(progressBar, nextJourney.timeDiff);
             } else {
-                countdownTimer.textContent = 'Tidak ada jadwal';
+                countdownTimer.textContent = '⏳ Tidak ada jadwal';
                 nextDepartureInfo.textContent = 'Tidak ada jadwal berikutnya hari ini';
                 progressBar.style.width = '0%';
             }
         }
 
-        function updateSchedule(listElement, schedule, currentTimeElement, type) {
+        function updateSchedule(listElement, schedule, type) {
             listElement.innerHTML = '';
             const now = new Date();
             let nextFound = false;
-            
-            // Update current time display
-            currentTimeElement.textContent = `Waktu sekarang: ${now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`;
             
             schedule.forEach((item) => {
                 const firstDepTime = parseTime(type === 'pergi' ? item.bias.departure : item.krl.departure);
@@ -839,38 +807,38 @@
                 if (type === 'pergi') {
                     scheduleItem.innerHTML = `
                         <div>
-                            <div class="time">${item.bias.departure}</div>
-                            <div class="station">${item.bias.from}</div>
-                            <div class="train-type bias">BIAS</div>
+                            <div class="time-container">
+                                <span class="train-type bias">BIAS</span>
+                                <span class="time">${item.bias.departure}</span>
+                            </div>
+                            <div class="station">Sragen → Solo Jebres</div>
                         </div>
-                        <div class="transit">
-                            <div>${item.bias.arrival} → ${item.krl.departure}</div>
-                            <div class="transit-duration">Transit: ${formatDuration(item.transit)}</div>
-                        </div>
+                        <div class="countdown">${formatTimeDiff(timeDiff)}</div>
                         <div>
-                            <div class="time">${item.krl.arrival}</div>
-                            <div class="station">${item.krl.to}</div>
-                            <div class="train-type krl">KRL</div>
+                            <div class="time-container">
+                                <span class="train-type krl">KRL</span>
+                                <span class="time">${item.krl.arrival}</span>
+                            </div>
+                            <div class="station">Solo Jebres → Jogja</div>
                         </div>
-                        <div class="total-duration">${formatDuration(item.total)}</div>
                     `;
                 } else {
                     scheduleItem.innerHTML = `
                         <div>
-                            <div class="time">${item.krl.departure}</div>
-                            <div class="station">${item.krl.from}</div>
-                            <div class="train-type krl">KRL</div>
+                            <div class="time-container">
+                                <span class="train-type krl">KRL</span>
+                                <span class="time">${item.krl.departure}</span>
+                            </div>
+                            <div class="station">Jogja → Solo Jebres</div>
                         </div>
-                        <div class="transit">
-                            <div>${item.krl.arrival} → ${item.bias.departure}</div>
-                            <div class="transit-duration">Transit: ${formatDuration(item.transit)}</div>
-                        </div>
+                        <div class="countdown">${formatTimeDiff(timeDiff)}</div>
                         <div>
-                            <div class="time">${item.bias.arrival}</div>
-                            <div class="station">${item.bias.to}</div>
-                            <div class="train-type bias">BIAS</div>
+                            <div class="time-container">
+                                <span class="train-type bias">BIAS</span>
+                                <span class="time">${item.bias.arrival}</span>
+                            </div>
+                            <div class="station">Solo Jebres → Sragen</div>
                         </div>
-                        <div class="total-duration">${formatDuration(item.total)}</div>
                     `;
                 }
                 
@@ -880,8 +848,8 @@
 
         function updateAllSchedules() {
             const activeTab = pergiTab.classList.contains('active') ? 'pergi' : 'pulang';
-            updateSchedule(pergiList, sragenSchedules.pergi, currentTimePergi, 'pergi');
-            updateSchedule(pulangList, sragenSchedules.pulang, currentTimePulang, 'pulang');
+            updateSchedule(pergiList, sragenSchedules.pergi, 'pergi');
+            updateSchedule(pulangList, sragenSchedules.pulang, 'pulang');
             updateNextTrainInfo(activeTab);
         }
 
@@ -905,24 +873,21 @@
             if (nextTrain) {
                 krlCountdownTimer.textContent = formatTimeDiff(nextTrain.timeDiff);
                 krlNextDepartureInfo.innerHTML = `
-                    <strong>${nextTrain.departure}</strong> dari ${type === 'pergi' ? 'Solo Balapan' : 'Jogja'} → 
-                    Tiba <strong>${nextTrain.arrival}</strong> di ${type === 'pergi' ? 'Jogja' : 'Solo Balapan'}
+                    <strong>${nextTrain.departure}</strong> dari ${type === 'pergi' ? 'Palur' : 'Jogja'} → 
+                    Tiba <strong>${nextTrain.arrival}</strong> di ${type === 'pergi' ? 'Jogja' : 'Palur'}
                 `;
                 updateProgressBar(krlProgressBar, nextTrain.timeDiff);
             } else {
-                krlCountdownTimer.textContent = 'Tidak ada jadwal';
+                krlCountdownTimer.textContent = '⏳ Tidak ada jadwal';
                 krlNextDepartureInfo.textContent = 'Tidak ada jadwal berikutnya hari ini';
                 krlProgressBar.style.width = '0%';
             }
         }
 
-        function updateKrlSchedule(listElement, schedule, currentTimeElement, type) {
+        function updateKrlSchedule(listElement, schedule, type) {
             listElement.innerHTML = '';
             const now = new Date();
             let nextFound = false;
-            
-            // Update current time display
-            currentTimeElement.textContent = `Waktu sekarang: ${now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`;
             
             schedule.forEach((item) => {
                 const depTime = parseTime(item.departure);
@@ -937,13 +902,17 @@
                 
                 scheduleItem.innerHTML = `
                     <div>
-                        <div class="time">${item.departure}</div>
-                        <div class="station">${type === 'pergi' ? 'Solo Balapan' : 'Jogja'}</div>
+                        <div class="time-container">
+                            <span class="station">${type === 'pergi' ? 'Palur' : 'Jogja'}</span>
+                            <span class="time">${item.departure}</span>
+                        </div>
                     </div>
                     <div class="countdown">${formatTimeDiff(timeDiff)}</div>
                     <div>
-                        <div class="time">${item.arrival}</div>
-                        <div class="station">${type === 'pergi' ? 'Jogja' : 'Solo Balapan'}</div>
+                        <div class="time-container">
+                            <span class="station">${type === 'pergi' ? 'Jogja' : 'Palur'}</span>
+                            <span class="time">${item.arrival}</span>
+                        </div>
                     </div>
                 `;
                 
@@ -953,8 +922,8 @@
 
         function updateKrlAllSchedules() {
             const activeTab = krlPergiTab.classList.contains('active') ? 'pergi' : 'pulang';
-            updateKrlSchedule(krlPergiList, krlSchedules.pergi, krlCurrentTimePergi, 'pergi');
-            updateKrlSchedule(krlPulangList, krlSchedules.pulang, krlCurrentTimePulang, 'pulang');
+            updateKrlSchedule(krlPergiList, krlSchedules.pergi, 'pergi');
+            updateKrlSchedule(krlPulangList, krlSchedules.pulang, 'pulang');
             updateKrlNextTrainInfo(activeTab);
         }
 
